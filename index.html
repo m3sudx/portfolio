@@ -96,19 +96,13 @@
       </div>
 
       <div class="intro-chat reveal">
-        <div class="chat" role="img" aria-label="Example chat: a visitor asks what Mesud has built and gets a cited answer">
-          <div class="chat-head"><span>Ask about Mesud</span><span class="chat-x" aria-hidden="true">×</span></div>
-          <div class="chat-body">
-            <div class="bubble bot step">Hi! Ask me anything about Mesud's work.</div>
-            <div class="bubble me step">What has he built?</div>
-            <div class="bubble bot wide step">
-              <div>An AI chat widget that answers from your own documents, and a peer-to-peer marketplace with live maps and bookings <sup>1</sup>.</div>
-              <div class="chat-src">Sources: [1] Projects</div>
-            </div>
-          </div>
-          <div class="chat-foot">
-            <div class="chat-input">Type your question…</div>
-            <div class="chat-send">Send</div>
+        <div class="code-card" id="codeCard" role="img" aria-label="Example code: build a project by understanding the problem first, then planning, developing, testing and launching">
+          <div class="code-bar"><span></span><span></span><span></span><em>answer.ts</em></div>
+          <pre class="code" aria-hidden="true"><code><span class="ln" style="--i:0;--n:26"><i class="d">// Start with the problem.</i></span><span class="ln" style="--i:1;--n:36"><i class="k">async function</i> <i class="f">build</i>(idea: string) {</span><span class="ln" style="--i:2;--n:41">  <i class="k">const</i> problem = <i class="k">await</i> <i class="f">understand</i>(idea);</span><span class="ln" style="--i:3;--n:37">  <i class="k">const</i> design = <i class="k">await</i> <i class="f">plan</i>(problem);</span><span class="ln" style="--i:4;--n:36">  <i class="k">const</i> app = <i class="k">await</i> <i class="f">develop</i>(design);</span><span class="ln" style="--i:5;--n:1"> </span><span class="ln" style="--i:6;--n:18">  <i class="k">await</i> <i class="f">test</i>(app);</span><span class="ln" style="--i:7;--n:21">  <i class="k">return</i> <i class="f">launch</i>(app);</span><span class="ln" style="--i:8;--n:1">}</span></code></pre>
+          <div class="code-answer" style="--d:9" aria-hidden="true">
+            <div class="q">What matters most in a project?</div>
+            <div class="a">Understanding the problem first. Everything else, from design to code to launch, follows from that.</div>
+            <div class="src"><b>[1]</b> Principles</div>
           </div>
         </div>
       </div>
@@ -168,11 +162,16 @@
       <div class="row">
         <h2 class="label">About</h2>
         <div class="row-body about">
-          <div class="photo"><img src="images/mesud.jpg" alt="Portrait of Mesud Ali" width="250" height="250" loading="lazy"></div>
           <div class="about-text">
-            <p>I am a full-stack developer who loves turning an idea into a product people actually use. I taught myself to build, then went deeper through the AI Powered Fullstack Application Development Program at Evangadi, and I keep learning by shipping real projects.</p>
+            <p class="about-lead">I am a full-stack developer who loves turning an idea into a product people actually use. I taught myself to build, then went deeper through the AI Powered Fullstack Application Development Program at Evangadi, and I keep learning by shipping real projects.</p>
             <p>My strengths are discipline and follow-through. I break big problems into clear steps, test what I build, and keep going until it works properly. A statistics background at Addis Ababa University means I check the data and measure results, so I can explain what an AI feature does and how well it does it, in plain language.</p>
+            <ul class="about-facts">
+              <li><b>2</b><span>Live projects</span></li>
+              <li><b>2</b><span>Languages</span></li>
+              <li><b>AI</b><span>Evangadi program</span></li>
+            </ul>
           </div>
+          <div class="photo"><img src="images/mesud.jpg" alt="Portrait of Mesud Ali" width="220" height="280" loading="lazy"></div>
         </div>
       </div>
     </section>
@@ -198,7 +197,7 @@
           <div class="mail" aria-hidden="true">
             <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
             <div class="mail-tile">
-              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#f5f5f5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6.5L20.5 7"/></svg>
+              <svg class="plane" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#f5f5f5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
             </div>
           </div>
         </div>
@@ -210,16 +209,15 @@
     Thanks for visiting.
   </footer>
 
-  <!-- Optional: the real Askly chat widget.
-       1) Copy the data-key from your Askly dashboard (business > Settings).
-       2) Add this site's domain to that business's allowed websites.
-       3) Remove the comment markers around the script below.
-  <script src="https://askly-production-92d0.up.railway.app/widget/askly.js"
-          data-key="YOUR_KEY_HERE"
-          data-api="https://askly-production-92d0.up.railway.app"
-          data-title="Ask about Mesud"
-          data-color="#171717"></script>
-  -->
+  <!-- Askly chat widget: answers questions about Mesud from his own documents. -->
+  <script
+    src="https://askly-production-92d0.up.railway.app/widget/askly.js"
+    data-key="dae06ce9c2a9a7580e57e0eafa9739d8"
+    data-title="Mesud Ali"
+    data-color="#3a3a3a"
+    data-position="right"
+    data-lang="en"
+    defer></script>
 
   <script src="script.js"></script>
 </body>

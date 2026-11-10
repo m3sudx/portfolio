@@ -211,3 +211,138 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 // ---------- Footer year ----------
 const year = document.getElementById("year");
 if (year) year.textContent = new Date().getFullYear();
+
+
+
+// ---------- Askly widget: gentle bounce + hello bubble to attract attention ----------
+(function asklyNudge() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const script = document.querySelector('script[src*="askly.js"]');
+  const side = (script && script.dataset.position) === "left" ? "left" : "right";
+
+  let tries = 0;
+  const wait = setInterval(() => {
+    const host = document.getElementById("askly-widget");
+    const sr = host && host.shadowRoot;
+    const btn = sr && sr.querySelector(".launcher");
+    const root = sr && sr.querySelector(".root");
+    if (!btn || !root) {
+      if (++tries > 80) clearInterval(wait); // give up after about 20 seconds
+      return;
+    }
+    clearInterval(wait);
+
+    const style = document.createElement("style");
+    style.textContent = `
+      @keyframes nudge-bounce {
+        0%, 100% { transform: translateY(0); }
+        20% { transform: translateY(-12px); }
+        40% { transform: translateY(0); }
+        55% { transform: translateY(-6px); }
+        70% { transform: translateY(0); }
+      }
+      @keyframes nudge-ring {
+        0%   { box-shadow: 0 0 0 0 rgba(243,239,232,.5); }
+        100% { box-shadow: 0 0 0 20px rgba(243,239,232,0); }
+      }
+      .launcher.attn { animation: nudge-bounce 1.1s ease 1, nudge-ring 1.6s ease-out 2; }
+      .nudge {
+        position: absolute; bottom: 8px; ${side}: 68px;
+        background: #f3efe8; color: #171717; padding: 10px 14px; border-radius: 12px;
+        font: 500 14px/1.2 system-ui, -apple-system, "Segoe UI", sans-serif;
+        white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,.35);
+        opacity: 0; transform: translateY(6px);
+        transition: opacity .3s ease, transform .3s ease; pointer-events: none;
+      }
+      .nudge.show { opacity: 1; transform: none; }
+    `;
+    sr.appendChild(style);
+
+    const bubble = document.createElement("div");
+    bubble.className = "nudge";
+    bubble.textContent = "Ask me about Mesud";
+    root.appendChild(bubble);
+
+    let stopped = false;
+    const stop = () => {
+      stopped = true;
+      bubble.classList.remove("show");
+      btn.classList.remove("attn");
+    };
+    btn.addEventListener("click", stop);
+
+    const play = () => {
+      if (stopped) return;
+      btn.classList.remove("attn");
+      void btn.offsetWidth; // restart the animation
+      btn.classList.add("attn");
+    };
+
+    const showBubble = () => {
+      if (stopped) return;
+      bubble.classList.add("show");
+      setTimeout(() => bubble.classList.remove("show"), 6000);
+    };
+
+    // First nudge after 3.5 seconds.
+    setTimeout(() => {
+      play();
+      showBubble();
+    }, 3500);
+
+    // Then keep going until the visitor clicks the icon:
+    // a bounce every 10 seconds, and the hello bubble every 40 seconds.
+    let beat = 0;
+    setInterval(() => {
+      if (stopped) return;
+      beat++;
+      play();
+      if (beat % 4 === 0) showBubble();
+    }, 10000);
+  }, 250);
+})();
+
+
+// ---------- Hero code window: gentle tilt following the mouse ----------
+(function codeTilt() {
+  const card = document.getElementById("codeCard");
+  if (!card) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!window.matchMedia("(hover: hover)").matches) return;
+  card.addEventListener("mousemove", (e) => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.setProperty("--ry", (x * 7).toFixed(2) + "deg");
+    card.style.setProperty("--rx", (-y * 7).toFixed(2) + "deg");
+  });
+  card.addEventListener("mouseleave", () => {
+    card.style.setProperty("--ry", "0deg");
+    card.style.setProperty("--rx", "0deg");
+  });
+})();
+
+
+
+// ---------- Askly widget: greeting should talk about Mesud, not "us" ----------
+(function asklyGreeting() {
+  const FROM = /Ask me anything about us\.?/i;
+  const TO = "Ask me anything about Mesud.";
+  const fix = (sr) => {
+    const walker = document.createTreeWalker(sr, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = walker.nextNode())) {
+      if (FROM.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(FROM, TO);
+    }
+  };
+  let tries = 0;
+  const wait = setInterval(() => {
+    const host = document.getElementById("askly-widget");
+    const sr = host && host.shadowRoot;
+    if (!sr) { if (++tries > 80) clearInterval(wait); return; }
+    clearInterval(wait);
+    fix(sr);
+    new MutationObserver(() => fix(sr)).observe(sr, { childList: true, subtree: true, characterData: true });
+  }, 250);
+})();
