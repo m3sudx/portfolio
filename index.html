@@ -184,6 +184,31 @@
           <div class="contact-text">
             <p class="cta">Let's connect.</p>
             <p class="contact-copy">Questions, ideas or just want to say hello? Send me a message and let's talk.</p>
+
+            <form class="contact-form" id="contactForm" novalidate>
+              <div class="field-row">
+                <div class="field">
+                  <label for="cf-name">Name</label>
+                  <input id="cf-name" name="from_name" type="text" autocomplete="name" maxlength="80" required placeholder="Your name">
+                </div>
+                <div class="field">
+                  <label for="cf-email">Email</label>
+                  <input id="cf-email" name="from_email" type="email" autocomplete="email" maxlength="120" required placeholder="you@example.com">
+                </div>
+              </div>
+              <div class="field">
+                <label for="cf-message">Message</label>
+                <textarea id="cf-message" name="message" rows="5" maxlength="2000" required placeholder="Tell me about your project or idea"></textarea>
+              </div>
+              <!-- Spam trap: real visitors never see or fill this -->
+              <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+              <div class="form-actions">
+                <button type="submit" class="btn" id="cfSend">Send message</button>
+                <p class="form-status" id="cfStatus" role="status" aria-live="polite"></p>
+              </div>
+            </form>
+
+            <p class="contact-or">Or reach me directly:</p>
             <div class="actions">
               <a href="mailto:mesud3818@gmail.com" class="btn">Email me</a>
               <a href="#contact" class="btn ghost" data-email-text hidden></a>
@@ -219,6 +244,7 @@
     data-lang="en"
     defer></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

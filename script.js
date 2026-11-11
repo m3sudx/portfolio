@@ -4,7 +4,13 @@
 const CONFIG = {
   email: "",    // e.g. "you@gmail.com"
   linkedin: "", // e.g. "https://www.linkedin.com/in/your-name"
-  upwork: "",   // e.g. "https://www.upwork.com/freelancers/~your-id"
+};
+
+// EmailJS (contact form). Get these three values from your EmailJS dashboard.
+const EMAILJS = {
+  publicKey: "8m49bWOv6JrmXox61",   // Account > General > Public Key
+  serviceId: "service_pkgbp5a",   // Email Services > your Gmail service
+  templateId: "template_786wh8q", // Email Templates > your template
 };
 
 document.documentElement.classList.add("js");
@@ -345,4 +351,54 @@ if (year) year.textContent = new Date().getFullYear();
     fix(sr);
     new MutationObserver(() => fix(sr)).observe(sr, { childList: true, subtree: true, characterData: true });
   }, 250);
+})();
+// ---------- Contact form (EmailJS) ----------
+(function contactForm() {
+  const form = document.getElementById("contactForm");
+  if (!form) return;
+  const status = document.getElementById("cfStatus");
+  const btn = document.getElementById("cfSend");
+  const COOLDOWN_MS = 30000;
+
+  const say = (msg, kind) => {
+    status.textContent = msg;
+    status.className = "form-status" + (kind ? " " + kind : "");
+  };
+  const configured = () =>
+    window.emailjs && !/^YOUR_/.test(EMAILJS.publicKey + EMAILJS.serviceId + EMAILJS.templateId);
+
+  if (configured()) emailjs.init({ publicKey: EMAILJS.publicKey });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (form.website.value) return; // bot filled the hidden field: pretend success
+    const name = form.from_name.value.trim();
+    const email = form.from_email.value.trim();
+    const message = form.message.value.trim();
+
+    if (!name || !email || !message) return say("Please fill in your name, email and message.", "error");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return say("Please enter a valid email address.", "error");
+
+    try {
+      const last = Number(localStorage.getItem("cfLast") || 0);
+      if (Date.now() - last < COOLDOWN_MS) return say("Please wait a moment before sending another message.", "error");
+    } catch (_) {}
+
+    if (!configured()) return say("The form is not set up yet. Please use the email button below.", "error");
+
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+    say("");
+    try {
+      await emailjs.sendForm(EMAILJS.serviceId, EMAILJS.templateId, form);
+      try { localStorage.setItem("cfLast", String(Date.now())); } catch (_) {}
+      form.reset();
+      say("Thanks! Your message was sent. I will reply soon.", "ok");
+    } catch (err) {
+      say("Sorry, that did not send. Please try again or email me directly.", "error");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Send message";
+    }
+  });
 })();
